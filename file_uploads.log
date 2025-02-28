@@ -1,0 +1,20 @@
+2025-02-28 15:21:41,060 - WARNING -  * Debugger is active!
+2025-02-28 15:21:41,080 - INFO -  * Debugger PIN: 137-426-431
+2025-02-28 15:22:03,162 - INFO - 127.0.0.1 - - [28/Feb/2025 15:22:03] "GET /apps/upload HTTP/1.1" 200 -
+2025-02-28 15:22:03,664 - INFO - 127.0.0.1 - - [28/Feb/2025 15:22:03] "[36mGET /static/styles.css HTTP/1.1[0m" 304 -
+2025-02-28 15:22:03,777 - INFO - 127.0.0.1 - - [28/Feb/2025 15:22:03] "[36mGET /static/files.js HTTP/1.1[0m" 304 -
+2025-02-28 15:22:03,800 - INFO - 127.0.0.1 - - [28/Feb/2025 15:22:03] "[33mGET /apps/files/ HTTP/1.1[0m" 404 -
+2025-02-28 15:22:04,116 - INFO - 127.0.0.1 - - [28/Feb/2025 15:22:04] "[33mGET /apps/files/ HTTP/1.1[0m" 404 -
+2025-02-28 15:23:12,942 - WARNING - \u26a0\ufe0f Unauthorized File Attempt! User: oo, IP: 127.0.0.1, File: hho.py
+2025-02-28 15:23:12,944 - INFO - 127.0.0.1 - - [28/Feb/2025 15:23:12] "[31m[1mPOST /apps/files/upload HTTP/1.1[0m" 400 -
+2025-02-28 15:23:17,136 - WARNING - \u26a0\ufe0f Unauthorized File Attempt! User: oo, IP: 127.0.0.1, File: hho.py
+2025-02-28 15:23:17,137 - INFO - 127.0.0.1 - - [28/Feb/2025 15:23:17] "[31m[1mPOST /apps/files/upload HTTP/1.1[0m" 400 -
+2025-02-28 15:24:19,900 - INFO - \u2705 File uploaded: 8a4fd84864794ceca26c6de4f498e6e7_20250228152419.pdf by User oo from 127.0.0.1 (Time: 0.04s)
+2025-02-28 15:24:19,919 - INFO - 127.0.0.1 - - [28/Feb/2025 15:24:19] "POST /apps/files/upload HTTP/1.1" 200 -
+2025-02-28 15:24:20,120 - INFO - 127.0.0.1 - - [28/Feb/2025 15:24:20] "[33mGET /apps/files/ HTTP/1.1[0m" 404 -
+2025-02-28 15:24:36,981 - INFO - 127.0.0.1 - - [28/Feb/2025 15:24:36] "GET /apps/upload HTTP/1.1" 200 -
+2025-02-28 15:24:37,302 - INFO - 127.0.0.1 - - [28/Feb/2025 15:24:37] "[36mGET /static/styles.css HTTP/1.1[0m" 304 -
+2025-02-28 15:24:37,303 - INFO - 127.0.0.1 - - [28/Feb/2025 15:24:37] "[36mGET /static/files.js HTTP/1.1[0m" 304 -
+2025-02-28 15:24:37,562 - INFO - 127.0.0.1 - - [28/Feb/2025 15:24:37] "[33mGET /apps/files/ HTTP/1.1[0m" 404 -
+2025-02-28 15:24:37,638 - INFO - 127.0.0.1 - - [28/Feb/2025 15:24:37] "[33mGET /apps/files/ HTTP/1.1[0m" 404 -
+2025-02-28 15:31:28,233 - INFO -  * Detected change in 'c:\\Users\\shacd\\Boko-Hacks-2025\\routes\\files.py', reloading

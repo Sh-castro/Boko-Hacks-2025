@@ -78,52 +78,40 @@ def create_note():
 
 @notes_bp.route('/search')
 def search_notes():
-    """Search notes with intentional SQL injection vulnerability"""
+    """Secure search function - Prevents SQL Injection"""
     if 'user' not in session:
         return jsonify({'success': False, 'error': 'Not logged in'}), 401
-        
+
     current_user = User.query.filter_by(username=session['user']).first()
     if not current_user:
         return jsonify({'success': False, 'error': 'User not found'}), 404
 
-    query = request.args.get('q', '')
+    query = request.args.get('q', '').strip()  # Sanitize input
+
     print(f"Search query: {query}")
-    
+
     try:
-        sql = f"SELECT * FROM notes WHERE title LIKE '%{query}%' OR content LIKE '%{query}%'"
-        
-        # Log the raw SQL for debugging
-        print(f"Executing SQL: {sql}")
-        
-        # Execute the raw SQL
-        result = db.session.execute(text(sql))
-        
-        notes = []
-        for row in result:
-            # Handle created_at formatting properly - could be a string or datetime
-            created_at = row[3]
-            if isinstance(created_at, str):
-                created_at_str = created_at
-            else:
-                try:
-                    created_at_str = created_at.strftime('%Y-%m-%d %H:%M:%S') if created_at else None
-                except AttributeError:
-                    created_at_str = str(created_at) if created_at else None
-            
-            note = {
-                'id': row[0],
-                'title': row[1],
-                'content': row[2],
-                'created_at': created_at_str,
-                'user_id': row[4]
-            }
-            notes.append(note)
-        
-        print(f"Found {len(notes)} matching notes")
-        return jsonify({
-            'success': True,
-            'notes': notes
-        })
+        if not query:
+            return jsonify({'success': False, 'error': 'Search query cannot be empty'}), 400
+
+        # Use SQLAlchemy ORM (preferred approach)
+        notes = Note.query.filter(
+            (Note.title.ilike(f"%{query}%")) | (Note.content.ilike(f"%{query}%"))
+        ).filter_by(user_id=current_user.id).all()  # Ensure the user only searches their own notes
+
+        notes_list = []
+        for note in notes:
+            notes_list.append({
+                'id': note.id,
+                'title': note.title,
+                'content': note.content,
+                'created_at': note.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+                'user_id': note.user_id
+            })
+
+        print(f"Found {len(notes_list)} matching notes")
+        return jsonify({'success': True, 'notes': notes_list})
+
     except Exception as e:
         print(f"Error searching notes: {e}")
         db.session.rollback()

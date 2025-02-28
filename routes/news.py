@@ -1,6 +1,12 @@
+#We saw the possible vulnerability in the code, although
+# we were unable to execute the xss attack, we fixed to detect and 
+# reject those types of attacks
+
 from flask import Blueprint, render_template, jsonify, request
+from markupsafe import escape  # ✅ Corrected import
 import requests
 import json
+import re
 
 news_bp = Blueprint('news', __name__, url_prefix='/apps/news')
 
@@ -30,15 +36,18 @@ INTERNAL_NEWS = [
         "url": "#internal-only",
         "publishedAt": "2025-02-01T10:15:00Z",
         "urlToImage": ""
-    },
-    {
-        "title": "CONFIDENTIAL: Internal API Credentials",
-        "description": "API_KEY: 5x6hdPQmSK2aT9E3bL8nZ7yRfV4wX1  ADMIN_KEY: jKq2P8zX5sW7vT1yR4aB9nL6cE3hG",
-        "url": "#internal-only",
-        "publishedAt": "2025-01-30T14:45:00Z",
-        "urlToImage": ""
     }
 ]
+
+def detect_xss(payload):
+    """Detects potential XSS payloads"""
+    xss_patterns = [
+        r"<script.*?>", r"javascript:", r"onerror=", r"onload=", r"<img.*?onerror=", r"document\.cookie", r"eval\(",
+    ]
+    for pattern in xss_patterns:
+        if re.search(pattern, payload, re.IGNORECASE):
+            return True
+    return False
 
 @news_bp.route('/')
 def news_page():
@@ -47,63 +56,59 @@ def news_page():
 
 @news_bp.route('/fetch', methods=['GET'])
 def fetch_news():
-    """Fetch news from the News API with a vulnerability"""
+    """Fetch news from the News API with security improvements"""
     try:
-        # Get category from request, default to business
         category = request.args.get('category', 'business')
+        filter_param = request.args.get('filter', '{}')
         
-        # Map our category to API category
-        api_category = CATEGORY_MAPPING.get(category, 'business')
+        # Escape user input to prevent injection attacks
+        safe_category = escape(category)
+        safe_filter_param = escape(filter_param)
+        
+        # Check for XSS attempt
+        if detect_xss(filter_param):
+            return jsonify({'success': False, 'error': "No no no, we don't do that here! 🚫"}), 400
+        
+        # Validate category
+        api_category = CATEGORY_MAPPING.get(safe_category, 'business')
         api_url = f"{NEWS_API_BASE_URL}/top-headlines/category/{api_category}/{DEFAULT_COUNTRY}.json"
         
         print(f"Fetching news from: {api_url}")
-        
-        # Fetch news from external API
         response = requests.get(api_url, timeout=10)
         
         if response.status_code == 200:
             data = response.json()
             articles = data.get('articles', [])[:10]  # Limit to 10 articles
             
-            filter_param = request.args.get('filter', '{}')
-            
             try:
                 filter_options = json.loads(filter_param)
                 print(f"Filter options: {filter_options}")
                 
                 if filter_options.get('showInternal') == True:
-                    # Add internal news to the results
                     print("Adding internal news to results!")
                     articles = INTERNAL_NEWS + articles
             except json.JSONDecodeError:
-                print(f"Invalid filter parameter: {filter_param}")
+                return jsonify({'success': False, 'error': "Invalid filter parameter format."}), 400
             
-            # Transform the data to match our expected format
             transformed_data = {
                 'success': True,
-                'category': category,
+                'category': safe_category,
                 'data': []
             }
             
-            # Process articles
             for article in articles:
                 transformed_data['data'].append({
-                    'title': article.get('title', 'No Title'),
-                    'content': article.get('description', 'No content available'),
-                    'date': article.get('publishedAt', ''),
-                    'readMoreUrl': article.get('url', '#'),
-                    'imageUrl': article.get('urlToImage', '')
+                    'title': escape(article.get('title', 'No Title')),
+                    'content': escape(article.get('description', 'No content available')),
+                    'date': escape(article.get('publishedAt', '')),
+                    'readMoreUrl': escape(article.get('url', '#')),
+                    'imageUrl': escape(article.get('urlToImage', ''))
                 })
             
             return jsonify(transformed_data)
         else:
-            return jsonify({
-                'success': False,
-                'error': f'Failed to fetch news. Status code: {response.status_code}'
-            }), response.status_code
+            return jsonify({'success': False, 'error': f'Failed to fetch news. Status code: {response.status_code}'}), response.status_code
+    
     except Exception as e:
         print(f"Error fetching news: {e}")
-        return jsonify({
-            'success': False,
-            'error': str(e)
-        }), 500
+        return jsonify({'success': False, 'error': str(e)}), 500
