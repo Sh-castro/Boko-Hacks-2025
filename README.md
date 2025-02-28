@@ -52,7 +52,7 @@ git --version
 ```
 - Set VS Code as your default Git editor:
 ```
-get config --global core.editor "code --wait"
+git config --global core.editor "code --wait"
 ```
 
 5) Create and activate a virtual environment (recommended): (You can also do this through VS Code)
