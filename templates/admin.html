@@ -7,32 +7,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Admin Panel</h1>
-
-    {% if is_default_admin %}
-    <div class="secure-notice">
-        <strong>Security Notice:</strong> You are using the default admin account. Please change your password to continue.
-    </div>
-    
-    <form action="{{ url_for('admin.change_password') }}" method="POST">
-        <label for="new_password">New Password:</label>
-        <input type="password" id="new_password" name="new_password" required>
-        
-        <label for="confirm_password">Confirm Password:</label>
-        <input type="password" id="confirm_password" name="confirm_password" required>
-        
-        <button type="submit">Change Password</button>
-    </form>
-
-    {% if error %}
-        <p style="color: red;">{{ error }}</p>
-    {% endif %}
-
-    {% if message %}
-        <p style="color: green;">{{ message }}</p>
-    {% endif %}
-    {% else %}
-    <!-- React-based Admin Interface -->
     <div id="admin-root"></div>
 
     <script type="module">
@@ -43,6 +17,5 @@
         const root = ReactDOM.createRoot(document.getElementById('admin-root'));
         root.render(React.createElement(AdminInterface));
     </script>
-    {% endif %}
 </body>
 </html>

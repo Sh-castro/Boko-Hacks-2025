@@ -135,3 +135,4 @@ def get_uploaded_file(filename):
         return jsonify({'success': False, 'error': 'File does not exist'}), 404
 
     return send_from_directory(UPLOAD_FOLDER, filename)
+

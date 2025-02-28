@@ -7,7 +7,7 @@ from routes.register import register_bp
 from routes.about import about_bp
 from routes.apps import apps_bp
 from routes.notes import notes_bp
-from routes.admin import admin_bp, init_admin  # ✅ Use init_admin instead of init_admin_db
+from routes.admin import admin_bp, init_admin_db  # ✅ Use init_admin instead of init_admin_db
 from routes.files import files_bp
 from routes.captcha import captcha_bp
 from routes.retirement import retirement_bp
@@ -57,7 +57,7 @@ def setup_database():
             print("No existing tables found. Creating new tables...")
             db.create_all()
             
-            init_admin()  # ✅ Use init_admin instead of init_admin_db
+            init_admin_db()
         else:
             print("Existing tables found:", existing_tables)
            

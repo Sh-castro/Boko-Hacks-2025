@@ -174,3 +174,4 @@ def debug_database():
     except Exception as e:
         print(f"Debug Error: {e}")
         return jsonify({'error': str(e)}), 500
+    

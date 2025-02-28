@@ -21,3 +21,4 @@ class File(db.Model):
 
     def __repr__(self):
         return f'<File {self.filename}>'
+    

@@ -26,3 +26,4 @@ def logout():
     session.pop('_flashes',None)
     flash("You have been logged out.", "info")
     return redirect(url_for("login.login"))
+

@@ -112,3 +112,4 @@ def fetch_news():
     except Exception as e:
         print(f"Error fetching news: {e}")
         return jsonify({'success': False, 'error': str(e)}), 500
+
