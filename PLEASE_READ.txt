@@ -1,0 +1,17 @@
+Hello judges,
+
+Unfortunatly the database in our Repository got corrupted and we
+did not know how to fix it.
+
+We have uploded a fix version in my profile however we are aware
+it's past the time for submition, not linked to the original
+repository and we did not include a video.
+
+We just wanted you guys to check it and see if we found any good
+or interisting solutiones to the vulnerabilities that we found.
+
+finally we would like to say thank you for hosting 
+the event even though things did not turn out
+the way we wanted we still had fun.
+
+Hope that next year this event is even better!
